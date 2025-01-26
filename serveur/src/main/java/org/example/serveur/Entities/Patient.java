@@ -1,8 +1,7 @@
 package org.example.serveur.Entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -10,28 +9,42 @@ import lombok.Data;
 
 public class Patient {
     @Id
-    @JsonProperty("sensor_ID") // Nom utilisé dans le JSON
-    String SENSOR_ID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true)
+    String sensorId;
     String nom;
     String prenom;
     String adresse;
     String telephone;
+    @Column(unique = true)
     String email;
-    Double age;
+    String dateNaissance;
     Double weight;
     String motDePasse;
+    @Lob
+    private String photoUrl; // URL de la photo stockée dans Cloudinary
 
+    @Lob
+    private String cloudinaryPublicId; // Public ID pour Cloudinary
 
     // Getter et Setter pour SENSOR_ID
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getSENSOR_ID() {
-        return SENSOR_ID;
+        return sensorId;
     }
 
     public void setSENSOR_ID(String SENSOR_ID) {
-        this.SENSOR_ID = SENSOR_ID;
+        this.sensorId = SENSOR_ID;
     }
 
-    // Getter et Setter pour nom
     public String getNom() {
         return nom;
     }
@@ -40,7 +53,6 @@ public class Patient {
         this.nom = nom;
     }
 
-    // Getter et Setter pour prenom
     public String getPrenom() {
         return prenom;
     }
@@ -49,7 +61,6 @@ public class Patient {
         this.prenom = prenom;
     }
 
-    // Getter et Setter pour adresse
     public String getAdresse() {
         return adresse;
     }
@@ -58,7 +69,6 @@ public class Patient {
         this.adresse = adresse;
     }
 
-    // Getter et Setter pour telephone
     public String getTelephone() {
         return telephone;
     }
@@ -67,7 +77,6 @@ public class Patient {
         this.telephone = telephone;
     }
 
-    // Getter et Setter pour email
     public String getEmail() {
         return email;
     }
@@ -76,16 +85,14 @@ public class Patient {
         this.email = email;
     }
 
-    // Getter et Setter pour age
-    public Double getAge() {
-        return age;
+    public String getDateNaissance() {
+        return dateNaissance;
     }
 
-    public void setAge(Double age) {
-        this.age = age;
+    public void setDateNaissance(String dateNaissance) {
+        this.dateNaissance = dateNaissance;
     }
 
-    // Getter et Setter pour weight
     public Double getWeight() {
         return weight;
     }
@@ -94,13 +101,28 @@ public class Patient {
         this.weight = weight;
     }
 
-    // Getter et Setter pour motDePasse
     public String getMotDePasse() {
         return motDePasse;
     }
 
     public void setMotDePasse(String motDePasse) {
         this.motDePasse = motDePasse;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getCloudinaryPublicId() {
+        return cloudinaryPublicId;
+    }
+
+    public void setCloudinaryPublicId(String cloudinaryPublicId) {
+        this.cloudinaryPublicId = cloudinaryPublicId;
     }
 
 }

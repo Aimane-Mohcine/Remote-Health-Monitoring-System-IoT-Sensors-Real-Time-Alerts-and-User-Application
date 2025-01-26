@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav class="main-nav">
+            <!-- ***** Logo Start ***** -->
+            <a href="#" class="logo">
+              <h4 style="text-decoration: underline #FC4368;">Heart <span><fa-icon [icon]="heart"></fa-icon> </span> Sense</h4>
+            </a>
+            <!-- ***** Logo End ***** -->
+            <!-- ***** Menu Start ***** -->
+            <ul class="nav">
+              <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+              <li class="scroll-to-section"><a href="#contact">Contact Now</a></li>
+              <li class="scroll-to-section"><div class="main-red-button"><a [routerLink]="['/Login']">Login</a></div></li>
+            </ul>
+            <a class='menu-trigger'>
+              <span>Menu</span>
+            </a>
+            <!-- ***** Menu End ***** -->
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <router-outlet />
+
+
+
+  <footer>
+    <div class="container-fluid text-center">
+      <div class="row">
+        <div class="col-lg-12 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.25s">
+          <p class="text-center">© Copyright 2025 . All Rights Reserved.
+            <br>Design: <span rel="nofollow" class="text-danger">IAO team</span></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ***** Header Area End ***** -->
+
+
+
+
+
+

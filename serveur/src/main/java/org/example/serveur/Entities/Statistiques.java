@@ -1,7 +1,6 @@
 package org.example.serveur.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,27 +15,29 @@ public class Statistiques {
     private Double moyenne;
     private Double min;
     private Double max;
-    private Integer nombreAnomalie;
+    private Long nombreAnomalie;
     private LocalDateTime  lastUpdate;
-    private Double age;
+    String dateNaissance;
     private Double weight;
 
 
     public Statistiques() {
     }
-    public Statistiques(String sensorId, Double age,Double weight){
+    public Statistiques(String sensorId, String dateNaissance,Double weight){
         this.sensorId = sensorId;
         this.moyenne = 0.0;
         this.min = 0.0;
         this.max = 0.0;
-        this.nombreAnomalie = 0;
+        this.nombreAnomalie = 0L;
         this.lastUpdate = LocalDateTime.now();
-        this.age = age;
+        this.dateNaissance = dateNaissance;
         this.weight = weight;
     }
 
 
-    // Getters et Setters
+
+
+
     public String getSensorId() {
         return sensorId;
     }
@@ -69,11 +70,11 @@ public class Statistiques {
         this.max = max;
     }
 
-    public Integer getNombreAnomalie() {
+    public Long getNombreAnomalie() {
         return nombreAnomalie;
     }
 
-    public void setNombreAnomalie(Integer nombreAnomalie) {
+    public void setNombreAnomalie(Long nombreAnomalie) {
         this.nombreAnomalie = nombreAnomalie;
     }
 
@@ -85,12 +86,12 @@ public class Statistiques {
         this.lastUpdate = lastUpdate;
     }
 
-    public Double getAge() {
-        return age;
+    public String getDateNaissance() {
+        return dateNaissance;
     }
 
-    public void setAge(Double age) {
-        this.age = age;
+    public void setDateNaissance(String dateNaissance) {
+        this.dateNaissance = dateNaissance;
     }
 
     public Double getWeight() {

@@ -1,0 +1,95 @@
+<div class="container rounded bg-white mt-5 mb-5" *ngIf="profile; else errorTemplate">
+  <div class="row">
+    <div class="col-md-4 border-right">
+      <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+        <img class="rounded-circle mt-5" width="150px" [src]="profile.photoUrl || 'https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg'" alt="Profile Photo">
+        <span class="font-weight-bold">{{ profile.nom }} {{ profile.prenom }}</span>
+        <span class="text-black-50">{{ profile.email }}</span>
+      </div>
+    </div>
+    <div class="col-md-6 border-right">
+      <div class="p-3 py-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="text-right">Profile Settings</h4>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6"><label class="labels">Nom</label><input type="text" class="form-control" placeholder="Nom" [(ngModel)]="profile.nom"></div>
+          <div class="col-md-6"><label class="labels">Prenom</label><input type="text" class="form-control" placeholder="Prenom" [(ngModel)]="profile.prenom"></div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12"><label class="labels">Sensor ID</label><input disabled type="text" class="form-control" placeholder="Sensor ID" [(ngModel)]="profile.sensorId"></div>
+          <div class="col-md-12"><label class="labels">N° Telephone</label><input type="text" class="form-control" placeholder="N° Telephone" [(ngModel)]="profile.telephone"></div>
+          <div class="col-md-12"><label class="labels">Email</label><input type="text" class="form-control" placeholder="Email" [(ngModel)]="profile.email"></div>
+          <div class="col-md-12"><label class="labels">Adresse</label><input type="text" class="form-control" placeholder="Adresse" [(ngModel)]="profile.adresse"></div>
+          <div class="col-md-12"><label class="labels">Date de naissance</label><input type="date" class="form-control" [(ngModel)]="profile.dateNaissance"></div>
+          <div class="col-md-12"><label class="labels">Weight</label><input type="text" class="form-control" placeholder="Weight" [(ngModel)]="profile.weight"></div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="labels">Mot de passe</label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Mot de passe"
+              [(ngModel)]="profile.motDePasse"
+              (input)="checkPasswordMatch()" >
+          </div>
+          <div class="col-md-6">
+            <label class="labels">Confirmation</label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Confirmation"
+              [(ngModel)]="confirmationPassword"
+              (input)="checkPasswordMatch()" >
+            <!-- Message d'erreur si les mots de passe ne correspondent pas -->
+            <small class="text-danger" *ngIf="passwordMismatch">Les mots de passe ne correspondent pas.</small>
+          </div>
+        </div>
+
+        <div class="mt-5 d-grid text-center"><button class="btn btn-primary profile-button" type="button" (click)="saveProfile()">Save Profile</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Template d'erreur -->
+<ng-template #errorTemplate>
+  <div class="alert alert-danger text-center">
+    {{ errorMessage }}
+  </div>
+</ng-template>
+
+
+<div
+  class="success-popup"
+  [ngClass]="{'show': showSuccessPopup}"
+  [hidden]="!showSuccessPopup"
+>
+  <div class="popup-content">
+    <div class="icon-container">
+      <fa-icon [icon]="successIcon" class="success-icon"></fa-icon>
+    </div>
+    <div class="message-container">
+      <h4>modification Réussie!</h4>
+      <p>Votre profil a été modifié avec succès. Les changements ont été enregistrés et sont maintenant à jour.</p>
+    </div>
+    <button type="button" class="btn btn-primary ss" (click)="closePopup()">Close</button>
+  </div>
+</div>
+<div
+  class="success-popup"
+  [ngClass]="{'show': showErreurPopup}"
+  [hidden]="!showErreurPopup"
+>
+  <div class="popup-content">
+    <div class="icon-container">
+      <fa-icon [icon]="successIcon" class="success-icon"></fa-icon>
+    </div>
+    <div class="message-container">
+      <h4>Échec de la Modification</h4>
+      <p>Une erreur est survenue lors de la mise à jour de votre profil. Veuillez réessayer plus tard.</p>
+    </div>
+    <button type="button" class="btn btn-primary ss" (click)="closePopup()">Close</button>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="d-flex" *ngIf="profile ">
+  <!-- Sidebar -->
+  <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-light" style="width: 280px;">
+    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto p text-decoration-none">
+      <img [src]="profile.photoUrl ||'https://github.com/mdo.png '" alt="User Avatar" width="32" height="32" class="rounded-circle me-2">
+      <strong>{{ profile.nom }} {{profile.prenom}}</strong>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li>
+        <a (click)="setActiveTab('Dashboard')" type="button" [class.active]="activeTab === 'Dashboard'" class="nav-link p">
+          <i class="bi bi-speedometer2 me-2"></i>
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a (click)="setActiveTab('Profile')" type="button" [class.active]="activeTab === 'Profile'" class="nav-link p">
+          <i class="bi bi-table me-2"></i>
+          Profile
+        </a>
+      </li>
+      <li>
+        <a (click)="setActiveTab('Hestorique')" type="button" [class.active]="activeTab === 'Hestorique'" class="nav-link p">
+          <i class="bi bi-grid me-2"></i>
+          Hestorique
+        </a>
+      </li>
+      <hr style="color: #03A1E9">
+      <button class="btn btn-danger w-100 mt-2" (click)="logout()">Logout</button>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div id="content" class="p-1 w-100">
+    <div *ngIf="activeTab === 'Dashboard'">
+      <!-- Pass the userId to the DashboardComponent -->
+      <app-dashboard ></app-dashboard>
+    </div>
+    <div *ngIf="activeTab === 'Profile'">
+      <app-profile></app-profile>
+    </div>
+    <div *ngIf="activeTab === 'Hestorique'">
+      <app-hestorique ></app-hestorique>
+    </div>
+  </div>
+</div>

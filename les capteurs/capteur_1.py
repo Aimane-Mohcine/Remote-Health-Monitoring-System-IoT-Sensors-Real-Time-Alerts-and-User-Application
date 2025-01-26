@@ -9,6 +9,8 @@ BROKER = "mqtt.eclipseprojects.io"  # Broker public
 PORT = 1883                         # Port MQTT
 TOPIC = "iot/heart_rate/"+SENSOR_ID    # Topic du capteur
 TOPIC_STATS ="iot/update/"+SENSOR_ID          # Topic pour les statistiques
+TOPIC_live = "iot/heart_rate/chart"+SENSOR_ID    # Topic du capteur
+
 
 
 def generate_heart_rate():
@@ -16,7 +18,7 @@ def generate_heart_rate():
     Génère une fréquence cardiaque simulée pour une personne normale.
     :return: Fréquence cardiaque simulée
     """
-    return random.randint(60, 900)
+    return random.randint(60,100)
 
 def generate_heart_rate_average():
     """
@@ -101,6 +103,7 @@ def simulate_heart_rate():
         
         # Publier les données sur le broker MQTT
         client.publish(TOPIC, cbor_encoded_data)
+        client.publish(TOPIC_live,cbor_encoded_data)
         print(f"Données publiées sur {TOPIC} : {senml_data}\n")
         
   # Ajouter la donnée à la liste des statistiques

@@ -1,0 +1,60 @@
+.transactions {
+  width: 100%;
+
+  .transaction-wrapper {
+    overflow: auto;
+    width: 100%;
+  }
+
+  .title {
+    width: 100%;
+    padding-bottom: 5px;
+    text-align: center;
+    font-size: 25px;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica,
+    sans-serif;
+  }
+
+  .transaction {
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    width: 100%;
+    border-bottom: 1px solid #FF3835;
+
+    .image {
+      width: 25%;
+      color: #016b9c;
+    }
+
+    .title {
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+    }
+
+    .price {
+      padding: 10px;
+      font-size: 16px;
+      width: 70%;
+    }
+
+    .price1 {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .shop-location {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+
+      .location {
+        margin-top: 4px;
+        font-size: 14px;
+        color: grey;
+      }
+    }
+  }
+}

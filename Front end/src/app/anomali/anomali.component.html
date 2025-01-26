@@ -1,0 +1,32 @@
+<div class="transactions">
+  <strong style="color:#FF3835;"><div class="title p-4 text-center">Last Anomaly </div></strong>
+  <div class="transaction-wrapper">
+
+    <strong style="color: #016b9c;">
+      <div class="transaction">
+        <div class="image">
+          ID
+        </div>
+        <div class="title"style="color: #016b9c;" >Date</div>
+        <div class="title"style="color: #016b9c;" >Heure</div>
+        <div class="price text-center">heart rate</div>
+        <div class="price text-center">anomaly type</div>
+
+      </div>
+    </strong>
+
+    <!-- Liste des anomalies -->
+    <div *ngFor="let transaction of transactions" class="transaction">
+      <div class="image">
+        {{ transaction.id }} <fa-icon [icon]="dot"></fa-icon>
+      </div>
+      <div class="title">{{ transaction.date }}</div>
+      <div class="title">{{ transaction.heure }}</div>
+      <div class="price text-center">{{ transaction.heart_rate | number:'1.2-2' }}</div>
+      <div class="price text-center">{{ transaction.anomalyType }}</div>
+
+    </div>
+
+  </div>
+
+</div>

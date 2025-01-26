@@ -1,0 +1,86 @@
+<div class="widget-container row justify-content-center p-4">
+  <div class="title p-4">
+    <strong>This is your statistics for the last 30 minutes</strong>
+  </div>
+
+  <!-- Widgets -->
+  <div *ngIf="statistiques" class="row w-100 justify-content-center">
+    <!-- Moyenne Rate -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="widget green">
+        <div class="icon">
+          <fa-icon [icon]="heart"></fa-icon>
+        </div>
+        <div class="value">
+          <div class="top">{{ statistiques.moyenne | number:'1.2-2' }}</div>
+          <div class="bottom">Moyenne Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Max Rate -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="widget orange">
+        <div class="icon">
+          <fa-icon [icon]="heart_max"></fa-icon>
+        </div>
+        <div class="value">
+          <div class="top">{{ statistiques.max | number:'1.2-2' }}</div>
+          <div class="bottom">Max Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Min Rate -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="widget blue">
+        <div class="icon">
+          <fa-icon [icon]="heart_min"></fa-icon>
+        </div>
+        <div class="value">
+          <div class="top">{{ statistiques.min | number:'1.2-2' }}</div>
+          <div class="bottom">Min Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nombre d'Anomalies -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="widget red">
+        <div class="icon">
+          <fa-icon [icon]="heartch"></fa-icon>
+        </div>
+        <div class="value">
+          <div class="top">{{ statistiques.nombreAnomalie }}</div>
+          <div class="bottom">NB° Anomaly</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Age -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="widget ceil">
+        <div class="icon">
+          <fa-icon [icon]="age"></fa-icon>
+        </div>
+        <div class="value">
+          <div class="top">{{ statistiques?.dateNaissance ? calculateAge(statistiques.dateNaissance) : 'N/A' }}</div>
+          <div class="bottom">Age</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Poids -->
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="widget yellow">
+        <div class="icon">
+          <fa-icon [icon]="wieght"></fa-icon>
+        </div>
+        <div class="value">
+          <div class="top">{{ statistiques.weight }}</div>
+          <div class="bottom">KG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

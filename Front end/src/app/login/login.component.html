@@ -1,0 +1,256 @@
+<div class="p-5 m-md-5 justify-content-center">
+  <div class="form-bg">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-offset-3 col-lg-12 col-md-offset-3 col-md-12">
+          <div class="form-container">
+            <div class="form-icon justify-content-center align-content-center">
+              <i class="fa fa-user-circle"></i>
+              <strong style="font-size: 23px">
+                Bienvenue à nouveau! Connectez-vous pour accéder à votre compte. <br>
+                <img src="assets/better-health.png" style="width: 50%;" />
+              </strong>
+            </div>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-horizontal p-5" style="margin-top: 6rem">
+              <h3 class="title">Member Login</h3>
+
+              <!-- Email Field -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input class="form-control" formControlName="email" type="email" placeholder="Email Address" />
+                <div *ngIf="formControls['email'].invalid && formControls['email'].touched" class="error-message text-center">
+                  Please enter a valid email.
+                </div>
+              </div>
+
+              <!-- Password Field -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input class="form-control" formControlName="password" type="password" placeholder="Password" />
+                <div *ngIf="formControls['password'].invalid && formControls['password'].touched" class="error-message text-center">
+                  Password must be at least 6 characters.
+                </div>
+              </div>
+
+              <!-- Login Failed Message -->
+              <div *ngIf="loginFailed" class="error-message text-danger text-center mb-3">
+                Incorrect email or password. Please try again.
+              </div>
+
+              <!-- Login Button -->
+              <button class="btn signin" type="submit" [disabled]="loginForm.invalid">Login</button>
+
+              <!-- Additional Links -->
+              <span class="forgot-pass">
+                <a type="button" (click)="openEmailModal()">Forgot Username/Password?</a>
+              </span>
+              <span class="forgot-pass text-black" style="text-decoration: none; font-size: 14px;">
+                Pas encore inscrit?
+                <a class="text-danger" style="font-size: 14px;" [routerLink]="['/Inscreption']">Créer un compte</a>
+              </span>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal for Forgot Password -->
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': emailModalOpen}" [hidden]="!emailModalOpen" (click)="closeModal('emailModal')">
+  <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content custom-modal">
+      <div class="modal-header">
+        <h4 class="modal-title text-center w-100">Heart <span class="p-1"><fa-icon [icon]="heart"></fa-icon></span> Sense</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Icon Column (Left) -->
+          <div class="col-md-4 d-flex justify-content-center align-items-center">
+            <i class="bi bi-shield-lock p-4" style="font-size: 200px; border: solid 8px ; border-color: #c0392b; border-radius: 30px 30px 30px 30px ; color: #c0392b;"></i>
+          </div>
+
+          <!-- Form Column (Right) -->
+          <div class="col-md-8">
+            <form (ngSubmit)="sendCode()" class="form-horizontal p-5">
+             <strong> <h3 class="title c text-center p-2">Forgot Password</h3></strong>
+
+              <!-- Email Field -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required placeholder="you@example.com">
+                <div *ngIf="email && !email.includes('@')" class="error-message text-center">
+                  Please enter a valid email.
+                </div>
+              </div>
+
+              <div class="p-1">
+                <!-- Close Button -->
+                <div class="d-grid p-1">
+                  <button type="button" class="btn btn-secondary btn-block" (click)="closeModal('emailModal')">Close</button>
+                </div>
+                <!-- Submit Button -->
+                <div class="d-grid p-1">
+                  <button type="submit" class="btn btn-primary btn-block" [disabled]="!email">Send Verification Code</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal for Entering Verification Code -->
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': codeModalOpen}" [hidden]="!codeModalOpen" (click)="closeModal('codeModal')">
+  <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content custom-modal">
+      <div class="modal-header">
+        <h4 class="modal-title text-center w-100">Heart <span class="p-1"><fa-icon [icon]="heart"></fa-icon></span> Sense</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Icon Column (Left) -->
+          <div class="col-md-4 d-flex justify-content-center align-items-center">
+            <i class="bi bi-envelope-arrow-up p-4" style="font-size: 200px; border: solid 8px ; border-color: #c0392b; border-radius: 30px 30px 30px 30px ; color: #c0392b;"></i>
+          </div>
+
+          <!-- Form Column (Right) -->
+          <div class="col-md-8">
+            <form (ngSubmit)="verifyCode()" class="form-horizontal p-5">
+              <h3 class="title c text-center p-2">Verification Code</h3>
+
+              <!-- Verification Code Field -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-key"></i></span>
+                <input type="text" class="form-control" id="verificationCode" [(ngModel)]="verificationCode" name="verificationCode" required placeholder="Enter verification code">
+              </div>
+
+              <div class="p-1">
+                <!-- Close Button -->
+                <div class="d-grid p-1">
+                  <button type="button" class="btn btn-secondary btn-block" (click)="closeModal('codeModal')">Close</button>
+                </div>
+                <!-- Submit Button -->
+                <div class="d-grid p-1">
+                  <button type="submit" class="btn btn-primary btn-block" [disabled]="!verificationCode">Verify Code</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal for New Password -->
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': newPasswordModalOpen}" [hidden]="!newPasswordModalOpen" (click)="closeModal('newPasswordModal')">
+  <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content custom-modal">
+      <div class="modal-header">
+        <h4 class="modal-title text-center w-100">Heart <span class="p-1"><fa-icon [icon]="heart"></fa-icon></span> Sense</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Icon Column (Left) -->
+          <div class="col-md-4 d-flex justify-content-center align-items-center">
+            <i class="bi bi-person-lock p-4" style="font-size: 200px; border: solid 8px ; border-color: #c0392b; border-radius: 30px 30px 30px 30px ; color: #c0392b;"></i>
+          </div>
+
+          <!-- Form Column (Right) -->
+          <div class="col-md-8">
+            <form (ngSubmit)="createNewPassword()" class="form-horizontal p-5">
+              <h3 class="title c text-center p-2">Create a New Password</h3>
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="newPassword"
+                  [(ngModel)]="newPassword"
+                  name="newPassword"
+                  required
+                  minlength="6"
+                  placeholder="Create a new password"
+                  #newPasswordInput="ngModel"
+                >
+                <div *ngIf="newPasswordInput.invalid && (newPasswordInput.touched)" class="form-text text-center text-danger">
+                  Password must be at least 6 characters long.
+                </div>
+              </div>
+
+              <!-- Confirm Password Field -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required minlength="6" placeholder="Confirm your new password">
+              </div>
+
+              <div class="p-1">
+                <!-- Close Button -->
+                <div class="d-grid p-1">
+                  <button type="button" class="btn btn-secondary btn-block" (click)="closeModal('newPasswordModal')">Close</button>
+                </div>
+                <!-- Submit Button -->
+                <div class="d-grid p-1">
+                  <button type="submit" class="btn btn-success btn-block" [disabled]="newPassword !== confirmPassword || newPassword.length < 6 || confirmPassword.length < 6">
+                    Create New Password
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Success Popup -->
+<!-- Success Popup -->
+<div
+  class="success-popup"
+  [ngClass]="{'show': showSuccessPopup}"
+  [hidden]="!showSuccessPopup"
+>
+  <div class="popup-content">
+    <div class="icon-container">
+      <fa-icon [icon]="successIcon" class="success-icon"></fa-icon>
+    </div>
+    <div class="message-container">
+      <h4>Password Changed Successfully!</h4>
+      <p>Your password has been updated. Please use the new password to log in.</p>
+    </div>
+    <button type="button" class="btn btn-primary ss" (click)="closePopup()">Close</button>
+  </div>
+</div>
+
+
+<div
+  class="success-popup"
+  [ngClass]="{'show': showErrorPopup}"
+  *ngIf="showErrorPopup"
+>
+  <div class="popup-content">
+    <div class="icon-container">
+      <fa-icon [icon]="successIcon" class="error-icon"></fa-icon>
+    </div>
+    <div class="message-container">
+      <h4>Erreur</h4>
+      <p>{{ errorMessage }}</p>
+    </div>
+    <button type="button" class="btn btn-danger" (click)="closePopup2()">Fermer</button>
+  </div>
+</div>

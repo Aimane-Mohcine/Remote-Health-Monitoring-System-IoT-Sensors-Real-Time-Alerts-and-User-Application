@@ -6,11 +6,22 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.eclipse.paho.client.mqttv3.*;
+import org.example.serveur.Entities.Anomalies;
+import org.example.serveur.Entities.Patient;
 import org.example.serveur.Model.SensorData;
+import org.example.serveur.Repository.AnomaliesRepository;
+import org.example.serveur.Repository.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +39,7 @@ public class MqttService_RealTime {
     private final Cache<String, Long> lastAlertTimestamps;
 
     private final MqttClient mqttClient;
+
 
     public MqttService_RealTime() throws MqttException {
         // Initialiser Caffeine Cache avec expiration après 15 minutes
@@ -96,30 +108,34 @@ public class MqttService_RealTime {
         // Détection des Anomalies
         String anomalyType = null;
         String explanation = null;
+        String Recommandation=null;
 
         if (avgHeartRate <= 0 || avgHeartRate > 290) {
             anomalyType = "Données incohérentes";
-            explanation = "🔎 Explication : Les données reçues semblent incorrectes. Cela peut être dû à un problème technique ou à un mauvais positionnement du capteur.\n" +
-                    "➡️ Recommandation : Vérifiez que le capteur est bien positionné ou remplacez-le s'il est défectueux.";
+            explanation = "Les données reçues semblent incorrectes. Cela peut être dû à un problème technique ou à un mauvais positionnement du capteur.";
+            Recommandation = "Vérifiez que le capteur est bien positionné ou remplacez-le s'il est défectueux.";
         } else if (avgHeartRate < 40) {
             anomalyType = "Fréquence critique basse";
-            explanation = "🔎 Explication : La fréquence cardiaque est dangereusement basse. Risque d'arrêt cardiaque.\n" +
-                    "➡️ Recommandation : Consulter immédiatement un médecin ou appeler les secours.";
+            explanation = "La fréquence cardiaque est dangereusement basse. Risque d'arrêt cardiaque.";
+            Recommandation = " Consulter immédiatement un médecin ou appeler les secours.";
         } else if (avgHeartRate >= 40 && avgHeartRate < 60) {
             anomalyType = "Bradycardie";
-            explanation = "🔎 Explication : Fréquence cardiaque basse pouvant causer de la fatigue ou des vertiges.\n" +
-                    "➡️ Recommandation : Surveiller les symptômes. Consulter un médecin si cela persiste.";
+            explanation = "Fréquence cardiaque basse pouvant causer de la fatigue ou des vertiges.";
+            Recommandation = "Surveiller les symptômes. Consulter un médecin si cela persiste.";
         } else if (avgHeartRate >= 60 && avgHeartRate <= 100) {
             anomalyType = null;
-            explanation = "✅ Explication : Fréquence cardiaque normale. Aucun problème détecté.";
+            explanation = "Fréquence cardiaque normale. Aucun problème détecté.";
         } else if (avgHeartRate > 100 && avgHeartRate <= 180) {
             anomalyType = "Tachycardie";
-            explanation = "🔎 Explication : Fréquence cardiaque élevée. Cela peut être lié au stress ou à l'effort.\n" +
-                    "➡️ Recommandation : Reposez-vous immédiatement et surveillez les symptômes. Consulter un médecin si cela persiste.";
+
+            explanation = " Fréquence cardiaque élevée. Cela peut être lié au stress ou à l'effort.";
+            Recommandation = " Reposez-vous immédiatement et surveillez les symptômes. Consulter un médecin si cela persiste.";
+
         } else if (avgHeartRate > 180 && avgHeartRate <= 290) {
             anomalyType = "Fréquence critique élevée";
-            explanation = "🔎 Explication : La fréquence cardiaque est extrêmement élevée, ce qui peut indiquer une urgence médicale.\n" +
-                    "➡️ Recommandation : Contactez immédiatement les secours ou rendez-vous aux urgences.";
+
+            explanation = " La fréquence cardiaque est extrêmement élevée, ce qui peut indiquer une urgence médicale.";
+            Recommandation = " Contactez immédiatement les secours ou rendez-vous aux urgences.";
         }
 
         // Gestion des alertes avec Caffeine Cache
@@ -128,18 +144,106 @@ public class MqttService_RealTime {
 
             // Vérifier le dernier horodatage pour ce capteur
             Long lastAlertTime = lastAlertTimestamps.getIfPresent(sensorId);
-            if (lastAlertTime == null || (currentTime - lastAlertTime) > ALERT_INTERVAL * 60 * 1000) {
+            if (lastAlertTime == null || (currentTime - lastAlertTime) > ALERT_INTERVAL * 120 * 1000) {
                 // Envoyer l'alerte
                 System.out.println("⚠️ Alerte pour le capteur " + sensorId + " : " + anomalyType);
                 System.out.println(explanation);
+                System.out.println(Recommandation);
+
+                sendAlert(sensorData,anomalyType,explanation,Recommandation);
 
                 // Mettre à jour l'horodatage dans la cache
                 lastAlertTimestamps.put(sensorId, currentTime);
             } else {
                 // Ignorer les alertes répétées
                 System.out.println("🔔 Aucune nouvelle alerte pour le capteur " + sensorId +
-                        ". Dernière alerte envoyée il y a moins de 15 minutes.");
+                        ". Dernière alerte envoyée il y a moins de 2 minutes.");
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+    @Autowired
+    PatientRepository patientRepository;
+    @Autowired
+    AnomaliesRepository anomaliesRepository;
+
+    @Autowired
+    private JavaMailSenderImpl mailSender;
+
+    private synchronized  void sendAlert( SensorData sensorData,String anomalyType,String explanation ,String Recommandation ){
+
+        Patient p=new Patient();
+        Optional<Patient> optionalPatient = patientRepository.findBySensorId(sensorData.getBn());
+
+        if (optionalPatient.isPresent()) {
+
+            Anomalies anomalies=new Anomalies(sensorData.getBn(),sensorData.getBt(),sensorData.getV(),anomalyType,explanation);
+
+            anomaliesRepository.save(anomalies);
+
+            String email=optionalPatient.get().getEmail();
+
+            // Configurer et envoyer l'email
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+
+                helper.setTo(email);
+                helper.setSubject(" ⚠️ Urgent : Anomalie détectée par votre capteur ");
+                String htmlMsg = """
+    <html>
+    <body>
+        <h1 style="color: #D9534F;"> Alerte critique : Vérifiez votre capteur immédiatement</h1>
+            <p>Bonjour,</p>
+                
+        <p>Nous avons détecté une anomalie sur votre capteur <strong>%s</strong>. Voici les détails :</p>
+        <ul>
+                    <li><strong>Type d'anomalie :</strong> %s</li>
+
+            <li><strong>Fréquence cardiaque moyenne :</strong> %s bpm</li>
+            <li><strong>Explication :</strong> %s</li>
+        </ul>
+        <p><strong>Recommandation :</strong> %s</p>
+        <br>
+        <p style="font-size: 12px; color: #555;">Cet email est généré automatiquement. Veuillez ne pas y répondre.</p>
+    </body>
+    </html>
+    """.formatted(
+                        sensorData.getBn(),  // Nom ou ID du capteur
+                        anomalyType,               // Type d'anomalie
+
+                        sensorData.getV(),         // Fréquence cardiaque moyenne
+                        explanation,               // Explication de l'anomalie
+                        Recommandation             // Recommandation
+                );
+
+
+                helper.setText(htmlMsg, true); // true indicates HTML content
+
+                mailSender.send(mimeMessage);
+System.out.println("nous avons send email et update anomalies");
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+
+
+
+
+            
+            
+                    }
+    }
+            
 }
+            

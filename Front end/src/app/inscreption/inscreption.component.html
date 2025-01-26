@@ -1,0 +1,248 @@
+<!-- This script got from frontendfreecode.com -->
+<div class="p-5 m-md-5 justify-content-center">
+  <div class="form-bg">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-offset-3 col-lg-12 col-md-offset-3 col-md-12">
+          <div class="form-container">
+            <div class="form-icon justify-content-center align-content-center">
+              <i class="fa fa-user-circle"></i>
+              <strong style="font-size: 23px">
+                Inscrivez-vous maintenant et commencez à soutenir les causes qui vous tiennent à cœur.
+              </strong>
+              <img src="assets/heart-rate.png" style="width: 60%;" />
+            </div>
+
+            <!-- Form with validation -->
+            <form class="form-horizontal" #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
+              <h3 class="title">Member Inscription</h3>
+
+              <!-- Sensor ID -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Sensor ID"
+                  name="sensorId"
+                  [(ngModel)]="user.sensorId"
+                  #sensorId="ngModel"
+                  required
+                />
+                <div *ngIf="sensorId.invalid && sensorId.touched" class="error text-center">
+                  <p>Sensor ID est obligatoire.</p>
+                </div>
+              </div>
+
+              <!-- Nom -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Nom"
+                  name="nom"
+                  [(ngModel)]="user.nom"
+                  #nom="ngModel"
+                  required
+                />
+                <div *ngIf="nom.invalid && nom.touched" class="error text-center">
+                  <p>Le nom est obligatoire.</p>
+                </div>
+              </div>
+
+              <!-- Prenom -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Prenom"
+                  name="prenom"
+                  [(ngModel)]="user.prenom"
+                  #prenom="ngModel"
+                  required
+                />
+                <div *ngIf="prenom.invalid && prenom.touched" class="error text-center">
+                  <p>Le prénom est obligatoire.</p>
+                </div>
+              </div>
+
+              <!-- Image Input -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-image"></i> </span>
+                <input
+                  class="form-control"
+                  type="file"
+                  accept="image/*"
+                  (change)="onImageSelected($event)"
+                  required
+                />
+              </div>
+
+
+              <!-- Age -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-birthday-cake"></i></span>
+                <input
+                  class="form-control"
+                  type="date"
+                  placeholder="Date de naissance"
+                  name="birthdate"
+                  [(ngModel)]="user.dateNaissance"
+                  #birthdate="ngModel"
+                  required
+                  max="{{ maxDate }}"
+                />
+                <div *ngIf="birthdate.invalid && birthdate.touched" class="error text-center">
+                  <p>L'âge est obligatoire.</p>
+                </div>
+              </div>
+              <!-- weight -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-balance-scale"></i></span>
+                <input
+                  class="form-control"
+                  type="number"
+                  placeholder="Poids (en kg)"
+                  name="weight"
+                  [(ngModel)]="user.weight"
+                  #weight="ngModel"
+                  required
+                  min="1"
+                  step="0.1"
+                />
+                <div *ngIf="weight.invalid && weight.touched" class="error text-center">
+                  <p *ngIf="weight.errors?.['required']">Le poids est obligatoire.</p>
+                  <p *ngIf="weight.errors?.['min']">Le poids doit être supérieur à 0 kg.</p>
+                </div>
+              </div>
+              <!-- Adresse -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-home"></i></span>
+                <input
+                  class="form-control"
+                  type="text"
+                  placeholder="Adresse"
+                  name="adresse"
+                  [(ngModel)]="user.adresse"
+                  #adresse="ngModel"
+                  required
+                />
+                <div *ngIf="adresse.invalid && adresse.touched" class="error text-center">
+                  <p>L'adresse est obligatoire.</p>
+                </div>
+              </div>
+
+
+              <!-- Telephone -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-phone"></i></span>
+                <input
+                  class="form-control"
+                  type="tel"
+                  placeholder="Téléphone (10 chiffres)"
+                  name="telephone"
+                  [(ngModel)]="user.telephone"
+                  #telephone="ngModel"
+                  required
+                  pattern="^[0-9]{10}$"
+                />
+                <div *ngIf="telephone.invalid && telephone.touched" class="error text-center">
+                  <p *ngIf="telephone.errors?.['required']">Le numéro de téléphone est obligatoire.</p>
+                  <p *ngIf="telephone.errors?.['pattern']">Le numéro de téléphone doit contenir exactement 10 chiffres.</p>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input
+                  class="form-control"
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  [(ngModel)]="user.email"
+                  #email="ngModel"
+                  required
+                />
+                <div *ngIf="email.invalid && email.touched" class="error text-center">
+                  <p *ngIf="email.errors?.['required']">L'email est obligatoire.</p>
+                  <p *ngIf="email.errors?.['email']">Veuillez entrer un email valide.</p>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="form-group">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input
+                  class="form-control"
+                  type="password"
+                  placeholder="Mot de passe (min. 6 caractères)"
+                  name="password"
+                  [(ngModel)]="user.motDePasse"
+                  #password="ngModel"
+                  required
+                  minlength="6"
+                />
+                <div *ngIf="password.invalid && password.touched" class="error text-center">
+                  <p *ngIf="password.errors?.['required']">Le mot de passe est obligatoire.</p>
+                  <p *ngIf="password.errors?.['minlength']">
+                    Le mot de passe doit contenir au moins 6 caractères.
+                  </p>
+                </div>
+              </div>
+
+
+
+
+
+              <button class="btn signin" type="submit"  [disabled]="signupForm.invalid || !isImageSelected()">Inscription</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div
+  class="success-popup"
+  [ngClass]="{'show': showSuccessPopup}"
+  [hidden]="!showSuccessPopup"
+>
+  <div class="popup-content">
+    <div class="icon-container">
+      <fa-icon [icon]="successIcon" class="success-icon"></fa-icon>
+    </div>
+    <div class="message-container">
+      <h4>Inscription Réussie!</h4>
+      <p>Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter avec vos identifiants.</p>
+    </div>
+    <button type="button" class="btn btn-primary ss" (click)="closePopup()">Close</button>
+  </div>
+</div>
+
+
+
+
+
+<div
+  class="success-popup"
+  [ngClass]="{'show': showErrorPopup}"
+  [hidden]="!showErrorPopup"
+>
+  <div class="popup-content">
+    <div class="icon-container">
+      <fa-icon [icon]="successIcon" class="success-icon"></fa-icon>
+    </div>
+    <div class="message-container">
+      <h4>Erreur d'inscription</h4>
+      <p>{{ errorMessage }}</p>
+    </div>
+    <button type="button" class="btn btn-danger" (click)="closePopup2()">Fermer</button>
+  </div>
+</div>
