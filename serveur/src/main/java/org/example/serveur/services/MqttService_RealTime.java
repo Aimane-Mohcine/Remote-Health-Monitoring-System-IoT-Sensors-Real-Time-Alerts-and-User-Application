@@ -80,7 +80,7 @@ public class MqttService_RealTime {
         System.out.println("Souscrit au topic : " + TOPIC);
     }
 
-    private void handleMessage(String topic, byte[] payload) throws IOException {
+    private  synchronized void handleMessage(String topic, byte[] payload) throws IOException {
         // Initialiser Jackson avec CBORFactory
         CBORFactory factory = new CBORFactory();
         ObjectMapper mapper = new ObjectMapper(factory);
@@ -144,7 +144,7 @@ public class MqttService_RealTime {
 
             // Vérifier le dernier horodatage pour ce capteur
             Long lastAlertTime = lastAlertTimestamps.getIfPresent(sensorId);
-            if (lastAlertTime == null || (currentTime - lastAlertTime) > ALERT_INTERVAL * 120 * 1000) {
+            if (lastAlertTime == null || (currentTime - lastAlertTime) > ALERT_INTERVAL * 1000 * 1000) {
                 // Envoyer l'alerte
                 System.out.println("⚠️ Alerte pour le capteur " + sensorId + " : " + anomalyType);
                 System.out.println(explanation);

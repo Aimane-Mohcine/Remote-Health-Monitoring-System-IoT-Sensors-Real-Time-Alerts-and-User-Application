@@ -62,7 +62,9 @@ export class LoginComponent {
           this.loginFailed = false; // Réinitialiser l'état d'échec
           console.log('Token et ID enregistrés avec succès.');
           console.log("voila "+response.idSenser);
-          this.router.navigate(['/Profile_home']);
+          this.router.navigate(['/Profile_home']).then(() => {
+            this.reloadPage();
+          });
         },
         error: (error) => {
           console.error('Login failed:', error);
@@ -234,5 +236,7 @@ export class LoginComponent {
 
 
 
-
+  reloadPage() {
+    window.location.reload();
+  }
 }

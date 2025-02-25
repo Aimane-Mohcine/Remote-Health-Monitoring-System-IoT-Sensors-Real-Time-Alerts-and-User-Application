@@ -43,7 +43,13 @@ export class SidebarComponent implements OnInit {
 
   logout() {
     localStorage.removeItem('idSenser');  // Clear user data from localStorage
-    this.router.navigate(['/Login']); // Redirect to login page
+    this.router.navigate(['/Login']).then(() => {
+      this.reloadPage();
+    });// Redirect to login page
+  }
+
+  reloadPage() {
+    window.location.reload();
   }
 
 }

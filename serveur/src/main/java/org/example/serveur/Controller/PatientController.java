@@ -358,6 +358,9 @@ public class PatientController {
         }
 
         Patient existingPatient = existingPatientOpt.get();
+       Optional<Statistiques> optionalStatistiques=statistiquesRepository.findBySensorId(sensorId);
+                Statistiques s= optionalStatistiques.get();
+
 
         if (profileData.containsKey("nom")) {
             existingPatient.setNom((String) profileData.get("nom"));
@@ -376,16 +379,19 @@ public class PatientController {
         }
         if (profileData.containsKey("dateNaissance")) {
             existingPatient.setDateNaissance((String) profileData.get("dateNaissance"));
+            s.setDateNaissance(existingPatient.getDateNaissance());
         }
         if (profileData.containsKey("weight")) {
             existingPatient.setWeight(Double.valueOf(profileData.get("weight").toString()));
+            s.setWeight(existingPatient.getWeight());
+
         }
         if (profileData.containsKey("motDePasse")) {
             existingPatient.setMotDePasse(hashPassword((String) profileData.get("motDePasse")));
         }
 
         patientRepository.save(existingPatient);
-
+        statistiquesRepository.save(s);
         return ResponseEntity.ok(Map.of("message", "Profil mis à jour avec succès."));
     }
 

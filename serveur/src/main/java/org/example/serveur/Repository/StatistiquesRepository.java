@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface StatistiquesRepository extends JpaRepository<Statistiques, String> {
     // Ajoutez des méthodes de requête si nécessaire
     Optional<Statistiques> findBySensorId(String SensorId);
+
 }
 

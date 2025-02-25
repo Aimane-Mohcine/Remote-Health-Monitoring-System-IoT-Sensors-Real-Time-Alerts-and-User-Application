@@ -13,7 +13,12 @@
             <ul class="nav">
               <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
               <li class="scroll-to-section"><a href="#contact">Contact Now</a></li>
-              <li class="scroll-to-section"><div class="main-red-button"><a [routerLink]="['/Login']">Login</a></div></li>
+              <li class="scroll-to-section">
+                <div class="main-red-button">
+                  <a *ngIf="!isLoggedIn" [routerLink]="['Login']">Login</a>
+                  <a *ngIf="isLoggedIn" [routerLink]="['/Profile_home']"><i class="bi bi-person-heart fs-4"></i></a>
+                </div>
+              </li>
             </ul>
             <a class='menu-trigger'>
               <span>Menu</span>
